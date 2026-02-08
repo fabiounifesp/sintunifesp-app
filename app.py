@@ -131,7 +131,8 @@ if abas:
                     
                     # Download corrigido para Android (sem .bin)
                     nome_arquivo = f"SINT_{nome_sel.split()[0]}.png"
-                    st.download_button("📥 SALVAR IMAGEM", img_data, nome_arquivo, "image/png")
+                    st.download_button("📥 BAIXAR", img_data, nome_arquivo, "image/png")
+
 
 
 
