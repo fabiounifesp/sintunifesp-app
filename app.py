@@ -6,7 +6,7 @@ import re
 from io import BytesIO
 
 # --- CONFIGURAÇÃO APP ---
-st.set_page_config(page_title="GREVE 25/26", layout="centered")
+st.set_page_config(page_title="PAGAR - GREVE 25/26", layout="centered")
 
 VERDE_SINDICATO = '#0f572d'
 VERDE_BORDA = '#c4e1c5'
@@ -132,4 +132,5 @@ if abas:
                     # Download corrigido para Android (sem .bin)
                     nome_arquivo = f"SINT_{nome_sel.split()[0]}.png"
                     st.download_button("📥 SALVAR IMAGEM", img_data, nome_arquivo, "image/png")
+
 
