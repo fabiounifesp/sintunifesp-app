@@ -6,7 +6,7 @@ import re
 from io import BytesIO
 
 # --- CONFIGURAÇÃO APP ---
-st.set_page_config(page_title="SINTUNIFESP", layout="centered")
+st.set_page_config(page_title="GREVE 25/26", layout="centered")
 
 VERDE_SINDICATO = '#0f572d'
 VERDE_BORDA = '#c4e1c5'
@@ -77,7 +77,7 @@ if abas:
 
         if opcoes:
             nome_sel = st.selectbox("Selecione:", opcoes)
-            if st.button("GERAR COMPROVANTE"):
+            if st.button("MOSTRAR"):
                 final_dados, soma_h = [], 0.0
                 for mes, df in abas.items():
                     if 'NOME' in df.columns:
@@ -99,7 +99,7 @@ if abas:
                     ax.axis('off')
 
                     # Títulos
-                    plt.text(0.5, 0.96, "SINTUNIFESP - OFICIAL", fontsize=12, ha='center', weight='bold', transform=ax.transAxes)
+                    plt.text(0.5, 0.96, "CONSULTA - OFICIAL", fontsize=12, ha='center', weight='bold', transform=ax.transAxes)
                     plt.text(0.5, 0.88, f"TOTAL: {soma_h:.2f} HORAS", fontsize=16, ha='center', color=VERMELHO_DESTAQUE, weight='bold', transform=ax.transAxes)
                     plt.text(0.02, 0.82, f"Servidor: {nome_sel}", fontsize=10, transform=ax.transAxes)
 
@@ -132,3 +132,4 @@ if abas:
                     # Download corrigido para Android (sem .bin)
                     nome_arquivo = f"SINT_{nome_sel.split()[0]}.png"
                     st.download_button("📥 SALVAR IMAGEM", img_data, nome_arquivo, "image/png")
+
