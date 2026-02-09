@@ -128,7 +128,8 @@ if abas:
                 buf = BytesIO()
                 plt.savefig(buf, format="png", bbox_inches='tight', dpi=200)
                 st.image(buf.getvalue(), use_container_width=True)
-                st.download_button("💾 SALVAR NO CELULAR", buf.getvalue(), f"SINTUNIFESP_{selecionado[:10]}.png", "image/png")
+                st.download_button("💾 SALVAR", buf.getvalue(), f"SERVIDOR_{selecionado[:10]}.png", "image/png")
         else:
             st.error("Nenhum servidor encontrado.")
+
 
