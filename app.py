@@ -88,7 +88,7 @@ if dados:
         if opcoes:
             selecionado = st.selectbox("Servidor encontrado:", opcoes)
             
-            if st.button("GERAR COMPROVANTE"):
+            if st.button("MOSTRAR"):
                 lista_tabela, minutos_acumulados = [], 0
                 for mes, df in dados.items():
                     if 'NOME' in df.columns:
@@ -145,4 +145,5 @@ if dados:
                 )
         else:
             st.error("Nenhum servidor encontrado.")
+
 
