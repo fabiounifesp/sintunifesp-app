@@ -77,7 +77,7 @@ if dados:
     # Botão de Pesquisa solicitado
     col_texto, col_btn = st.columns([3, 1])
     with col_texto:
-        nome_pesquisa = st.text_input("Nome do Servidor:", placeholder="Digite e clique em pesquisar")
+        nome_pesquisa = st.text_input("Servidor:", placeholder="Nome")
     with col_btn:
         st.write("<br>", unsafe_allow_html=True)
         btn_clicado = st.button("PESQUISAR")
@@ -137,3 +137,4 @@ if dados:
                 plt.savefig(buf, format="png", bbox_inches='tight', dpi=200)
                 st.image(buf.getvalue(), use_container_width=True)
                 st.download_button("💾 SALVAR", buf.getvalue(), f"Serv_{selecionado[:10]}.png", "image/png")
+
