@@ -138,10 +138,11 @@ if dados:
                 
                 st.image(buf.getvalue(), use_container_width=True)
                 st.download_button(
-                    label="💾 SALVAR COMPROVANTE", 
+                    label="💾 SALVAR", 
                     data=buf.getvalue(), 
                     file_name=f"{nome_para_salvar}.png", 
                     mime="image/png"
                 )
         else:
             st.error("Nenhum servidor encontrado.")
+
