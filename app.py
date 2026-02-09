@@ -133,8 +133,20 @@ if dados:
                     else:
                         cell.set_facecolor('white')
 
-                buf = BytesIO()
+               buf = BytesIO()
                 plt.savefig(buf, format="png", bbox_inches='tight', dpi=200)
+                
+                # --- LÓGICA DO NOME DO ARQUIVO (NOME E SOBRENOME) ---
+                partes_nome = selecionado.split()
+                if len(partes_nome) > 1:
+                    nome_para_arquivo = f"{partes_nome[0]}_{partes_nome[-1]}"
+                else:
+                    nome_para_arquivo = partes_nome[0]
+                
                 st.image(buf.getvalue(), use_container_width=True)
-                st.download_button("💾 SALVAR", buf.getvalue(), f"Serv_{selecionado[:10]}.png", "image/png")
+                st.download_button(
+                    label="💾 SALVAR NO CELULAR", 
+                    data=buf.getvalue(), 
+                    file_name=f"{nome_para_arquivo}.png", 
+                    mime="image/png")
 
