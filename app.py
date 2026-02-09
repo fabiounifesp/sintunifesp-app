@@ -136,8 +136,9 @@ if dados:
                 
                 st.image(buf.getvalue(), use_container_width=True)
                 st.download_button(
-                    label="💾 SALVAR NO CELULAR", 
+                    label="💾 SALVAR", 
                     data=buf.getvalue(), 
                     file_name=f"{nome_para_arquivo}.png", 
                     mime="image/png"
                 )
+
