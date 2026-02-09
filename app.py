@@ -58,7 +58,7 @@ if abas:
     # Campo de busca e Botão de Pesquisa [Image of a search interface with a button]
     col1, col2 = st.columns([3, 1])
     with col1:
-        nome_busca = st.text_input("Digite o nome:", placeholder="Ex: Carlos Eduardo")
+        nome_busca = st.text_input("Digite o nome:", placeholder="Ex: Fabio Pereira")
     with col2:
         st.write("<br>", unsafe_allow_html=True)
         clicou_pesquisar = st.button("PESQUISAR")
@@ -131,3 +131,4 @@ if abas:
                 st.download_button("💾 SALVAR NO CELULAR", buf.getvalue(), f"SINTUNIFESP_{selecionado[:10]}.png", "image/png")
         else:
             st.error("Nenhum servidor encontrado.")
+
