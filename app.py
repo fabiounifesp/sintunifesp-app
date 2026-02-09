@@ -13,7 +13,7 @@ VERDE_BORDA = '#c4e1c5'
 VERMELHO_DESTAQUE = '#c9302c'
 
 def converter_para_minutos(valor):
-    """Calcula matematicamente para o total, mas não altera a exibição da tabela"""
+    """Calcula matematicamente para o total, mas mantém o texto original para a tabela"""
     s = str(valor).lower().strip()
     if not s or s == 'nan': return 0
     if 'h' in s:
@@ -31,13 +31,13 @@ def converter_para_minutos(valor):
         return 0
 
 def formatar_minutos_para_texto(minutos_totais):
-    """Formata o total acumulado no padrão XhYYmin"""
+    """Formata o total acumulado preservando o estilo h/min"""
     h = int(minutos_totais // 60)
     m = int(minutos_totais % 60)
     return f"{h}h{m:02d}min" if m > 0 else f"{h}h"
 
 def tratar_janeiro(valor):
-    """Correção para o erro de Janeiro/2010"""
+    """Correção automática para os dias de Janeiro"""
     try:
         dt = pd.to_datetime(valor)
         if dt.year == 2010: return "05, 06, 10"
@@ -61,21 +61,22 @@ def carregar_dados():
         return processados
     except: return None
 
+# Botão Verde Sindicato
 st.markdown("<style>.stButton>button {width:100%; height:3.5em; background:#0f572d; color:white; font-weight:bold; border-radius:10px;}</style>", unsafe_allow_html=True)
 
 dados = carregar_dados()
 if dados:
-    st.subheader("🔍 Consulta de Servidores")
+    st.subheader("🔍 Consulta")
     
-    # Campo de busca e botão de pesquisa
+    # Campo de busca e botão de pesquisa solicitado
     col_texto, col_btn = st.columns([3, 1])
     with col_texto:
-        nome_pesquisa = st.text_input("Nome do Servidor:", placeholder="Digite o nome ou parte dele")
+        nome_pesquisa = st.text_input("Nome do Servidor:", placeholder="Digite o nome...")
     with col_btn:
         st.write("<br>", unsafe_allow_html=True)
-        btn_pesquisar = st.button("PESQUISAR")
+        clicou_pesquisar = st.button("PESQUISAR")
 
-    if nome_pesquisa or btn_pesquisar:
+    if nome_pesquisa or clicou_pesquisar:
         nomes_encontrados = []
         for df in dados.values():
             if 'NOME' in df.columns:
@@ -85,18 +86,18 @@ if dados:
         opcoes = sorted(list(set([str(n).strip().upper() for n in nomes_encontrados if str(n).strip() != 'nan'])))
 
         if opcoes:
-            selecionado = st.selectbox("Resultado da busca:", opcoes)
+            selecionado = st.selectbox("Servidor encontrado:", opcoes)
             
-            if st.button("GERAR RELATÓRIO"):
+            if st.button("GERAR COMPROVANTE"):
                 lista_tabela, minutos_acumulados = [], 0
                 for mes, df in dados.items():
                     if 'NOME' in df.columns:
                         res = df[df['NOME'].astype(str).str.strip().str.upper() == selecionado]
                         for _, row in res.iterrows():
+                            # Pega o valor exatamente como está na planilha (ex: 42h48min)
                             val_original = str(row.get('HORAS /GREVE', '0')).strip()
                             minutos_acumulados += converter_para_minutos(val_original)
                             dias_f = tratar_janeiro(row.get('DATA', '-'))
-                            # Na tabela, entra o val_original exatamente como está (ex: 42h48min)
                             lista_tabela.append([mes, dias_f, val_original])
 
                 total_final_texto = formatar_minutos_para_texto(minutos_acumulados)
@@ -109,6 +110,7 @@ if dados:
                 ax.text(0.5, 0.88, f"TOTAL ACUMULADO: {total_final_texto}", fontsize=16, ha='center', color=VERMELHO_DESTAQUE, weight='bold', transform=ax.transAxes)
                 ax.text(0.02, 0.81, f"Servidor: {selecionado}", fontsize=10, transform=ax.transAxes)
 
+                # Tabela blindada contra sobreposição (larguras fixas)
                 tabela_dados = [[l[0], textwrap.fill(l[1], width=25), l[2]] for l in lista_tabela]
                 tab = ax.table(cellText=tabela_dados, colLabels=['Mês', 'Dias de Greve', 'Horas'], 
                                loc='center', colWidths=[0.22, 0.56, 0.22], bbox=[0, 0, 1, 0.78])
@@ -127,18 +129,19 @@ if dados:
                 buf = BytesIO()
                 plt.savefig(buf, format="png", bbox_inches='tight', dpi=200)
                 
-                # --- LÓGICA DO NOME DO ARQUIVO (NOME E SOBRENOME) ---
+                # --- LÓGICA DO NOME DO ARQUIVO: PRIMEIRO E SEGUNDO NOME ---
                 partes_nome = selecionado.split()
-                if len(partes_nome) > 1:
-                    nome_para_arquivo = f"{partes_nome[0]}_{partes_nome[-1]}"
+                if len(partes_nome) >= 2:
+                    nome_para_salvar = f"{partes_nome[0]}_{partes_nome[1]}"
                 else:
-                    nome_para_arquivo = partes_nome[0]
+                    nome_para_salvar = partes_nome[0]
                 
                 st.image(buf.getvalue(), use_container_width=True)
                 st.download_button(
-                    label="💾 SALVAR", 
+                    label="💾 SALVAR COMPROVANTE", 
                     data=buf.getvalue(), 
-                    file_name=f"{nome_para_arquivo}.png", 
+                    file_name=f"{nome_para_salvar}.png", 
                     mime="image/png"
                 )
-
+        else:
+            st.error("Nenhum servidor encontrado.")
